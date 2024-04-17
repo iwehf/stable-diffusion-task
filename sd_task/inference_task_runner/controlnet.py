@@ -2,13 +2,14 @@ import base64
 import re
 from io import BytesIO
 
-from controlnet_aux import processor
 from PIL import Image
 
 from sd_task.inference_task_args.controlnet_args import ControlnetArgs
 
 
 def add_controlnet_pipeline_call_args(call_args: dict, controlnet: ControlnetArgs, image_width: int, image_height: int):
+    from controlnet_aux import processor
+
     image_data = re.sub(
         '^data:image/.+;base64,',
         '',

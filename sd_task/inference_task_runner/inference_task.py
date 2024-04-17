@@ -29,12 +29,6 @@ from .errors import wrap_download_error, wrap_execution_error
 from .log import log
 from .prompt import add_prompt_pipeline_call_args, add_prompt_refiner_sdxl_call_args
 
-if utils.get_accelerator() == "cuda":
-    # Use deterministic algorithms for reproducibility
-    os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":16:8"
-    torch.backends.cudnn.benchmark = False
-    torch.use_deterministic_algorithms(True)
-
 
 def get_pipeline_init_args(cache_dir: str, safety_checker: bool = True):
     init_args = {
@@ -189,6 +183,12 @@ def run_task(
 ) -> List[Image.Image]:
     if config is None:
         config = get_config()
+
+    if utils.get_accelerator() == "cuda":
+        # Use deterministic algorithms for reproducibility
+        os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":16:8"
+        torch.backends.cudnn.benchmark = False
+        torch.use_deterministic_algorithms(True)
 
     log("Task is started")
 
